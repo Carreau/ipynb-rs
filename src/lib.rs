@@ -19,6 +19,8 @@ pub enum Cell {
     Markdown(MarkdownCell),
     #[serde(rename = "code")]
     Code(CodeCell),
+    #[serde(rename = "raw")]
+    Raw(RawCell),
 }
 
 #[derive(Serialize, Deserialize)]
@@ -29,6 +31,15 @@ pub enum Output {
     ExecuteResult(ExecuteResultOutput),
     Stream(StreamOutput),
     DisplayData(DisplayDataOutput),
+    Error(ErrorOutput),
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct RawCell {
+    pub metadata: HashMap<String, Value>,
+    pub source: Vec<String>,
+    pub id: Option<String>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -36,7 +47,9 @@ pub enum Output {
 pub struct CodeCell {
     pub metadata: HashMap<String, Value>,
     pub source: Vec<String>,
-    pub execution_count: usize,
+    pub id: Option<String>,
+    // cell can be not executed, and it will then be null.
+    pub execution_count: Option<usize>,
     pub outputs: Vec<Output>,
 }
 
@@ -60,6 +73,17 @@ pub struct ExecuteResultOutput {
 
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+pub struct ErrorOutput {
+    pub ename: String, //pub data: Option<HashMap<String, Value>>,
+    pub evalue: String,
+    pub traceback: Vec<String>,
+    //pub metadata: Option<HashMap<String, Value>>,
+    //pub name: Option<String>,
+    //pub execution_count: usize
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct DisplayDataOutput {
     pub data: Option<HashMap<String, Value>>,
     pub metadata: Option<HashMap<String, Value>>,
@@ -70,6 +94,8 @@ pub struct DisplayDataOutput {
 #[serde(deny_unknown_fields)]
 pub struct MarkdownCell {
     pub metadata: HashMap<String, Value>,
+    pub id: Option<String>,
+    pub attachments: Option<HashMap<String, Value>>,
     pub source: Vec<String>,
 }
 
