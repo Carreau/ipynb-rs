@@ -6,6 +6,7 @@ authors = ["Matthias Bussonnier <bussonniermatthias@gmail.com>"]
 readme = "README.md"
 license = "MIT"
 repository = "https://github.com/Carreau/ipynb-rs"
+description = "Attempt at providing canonical structs to read/write Jupyter `.ipynb` (notebooks) files"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
